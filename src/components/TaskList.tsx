@@ -14,7 +14,7 @@ type TaskListProps = {
   group?: Group;
 }
 
-export default function TaskList({ title = 'Tasks', loading = false, tasks = [], onItemStatusChange, onItemNameChange, onItemDelete, group }: TaskListProps) {
+export default function TaskList({ title, loading = false, tasks = [], onItemStatusChange, onItemNameChange, onItemDelete, group = new Group() }: TaskListProps) {
   const header = title ? <Title level={4}>{title}</Title> : undefined;
 
   return (
