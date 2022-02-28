@@ -7,9 +7,9 @@ import reportWebVitals from './reportWebVitals';
 
 import App from './App';
 
-import TodoClient, { localTokenStorage } from './client/TodoClient';
+import AxiosTodoClient, { localTokenStorage } from './client/AxiosTodoClient';
 
-const todoClient = new TodoClient({
+const todoClient = new AxiosTodoClient({
   tokenStorage: localTokenStorage('__reactTodo:token'),
 });
 
