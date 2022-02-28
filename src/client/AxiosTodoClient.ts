@@ -47,7 +47,7 @@ export default class AxiosTodoClient {
       return token;
     }).catch(err => {
       const res = err.response;
-      if (res.status === 401) {
+      if (res && res.status === 401) {
         const { code, message } = res.data.error;
         return Promise.reject(new ApiError(code, message));
       }
@@ -66,7 +66,7 @@ export default class AxiosTodoClient {
     }).then(res => undefined)
       .catch(err => {
         const res = err.response;
-        if (res.status === 409) {
+        if (res && res.status === 409) {
           const { code, message } = res.data.error;
           return Promise.reject(new ApiError(code, message));
         }
@@ -169,7 +169,7 @@ export default class AxiosTodoClient {
     }).then(res => undefined)
       .catch(err => {
         const res = err.response;
-        if (res.status === 400) {
+        if (res && res.status === 400) {
           const { code, message } = res.data.error;
           return Promise.reject(new ApiError(code, message));
         }
