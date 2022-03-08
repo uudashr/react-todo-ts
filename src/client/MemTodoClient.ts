@@ -1,5 +1,38 @@
+type UserInfo = {
+  name: string;
+  email: string;
+};
 
-class MemTodoClient {
+type Task = {
+  id: number;
+  name: string;
+  completed?: boolean;
+};
+
+type Token = [string, string, number]
+
+namespace Entities {
+  export type Account = {
+    email: string;
+    name: string;
+    password: string;
+  };
+
+  export type Task = {
+    id: number;
+    name: string;
+    completed?: boolean;
+    ownerId: string;
+  };
+}
+
+export default class MemTodoClient {
+  private _accounts: Entities.Account[];
+
+  private _taskSequenceId: number = 3;
+  private _tasks: Entities.Task[];
+  private _token?: Token;
+
   constructor() {
     this._accounts = [
       { email: 'uudashr@gmail.com', name: 'Nuruddin Ashr', password: 'secret' },
@@ -13,27 +46,27 @@ class MemTodoClient {
     ];
   }
 
-  logIn(email, password) {
+  logIn(email: string, password: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const acc = this._accounts.find(acc => acc.email === email && acc.password === password);
       if (!acc) {
         return reject(new ApiError('invalid_credentials', 'Invalid username or password'))
       }
 
-      this._tokenParts = ['token', email, new Date().getTime()];
-      resolve(this._tokenParts.join('-'))
+      this._token = ['token', email, new Date().getTime()];
+      resolve(this._token.join('-'))
     });
   }
 
-  token() {
-    if (!this._tokenParts) {
+  token(): string | undefined {
+    if (!this._token) {
       return undefined;
     }
-    
-    return this._tokenParts.join('-');
+
+    return this._token.join('-');
   }
 
-  signUp(email, name, password) {
+  signUp(email: string, name: string, password: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const acc = this._accounts.find(acc => acc.email === email);
       if (acc) {
@@ -41,19 +74,19 @@ class MemTodoClient {
       }
 
       this._accounts = [...this._accounts, { email, name, password }];
-      resolve();
+      resolve(undefined);
     });
   }
 
   _authenticatedId() {
-    if (this._tokenParts) {
-      return this._tokenParts[1];
+    if (this._token) {
+      return this._token[1];
     }
 
     return undefined;
   }
 
-  userInfo() {
+  userInfo(): Promise<UserInfo> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -70,11 +103,11 @@ class MemTodoClient {
     });
   }
 
-  logOut() {
-    this._tokenParts = undefined;
+  logOut(): void {
+    this._token = undefined;
   }
 
-  addTask(name) {
+  addTask(name: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -83,11 +116,11 @@ class MemTodoClient {
 
       const id = ++this._taskSequenceId;
       this._tasks = [...this._tasks, { id, name, ownerId: authId }];
-      resolve();
+      resolve(undefined);
     });
   }
 
-  allTasks() {
+  allTasks(): Promise<Task[]> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -101,7 +134,7 @@ class MemTodoClient {
     });
   }
 
-  outstandingTasks() {
+  outstandingTasks(): Promise<Task[]> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -117,7 +150,7 @@ class MemTodoClient {
     });
   }
 
-  completedTasks() {
+  completedTasks(): Promise<Task[]> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -133,7 +166,7 @@ class MemTodoClient {
     });
   }
 
-  updateTaskStatus(id, completed) {
+  updateTaskStatus(id: number, completed: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -150,16 +183,16 @@ class MemTodoClient {
 
       this._tasks = this._tasks.map(task => {
         if (task.id === found.id) {
-          return  { ...task, completed };
+          return { ...task, completed };
         }
-    
+
         return task;
       });
-      resolve()
+      resolve(undefined)
     });
   }
 
-  updateTaskName(id, name) {
+  updateTaskName(id: number, name: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -179,16 +212,16 @@ class MemTodoClient {
 
       this._tasks = this._tasks.map(task => {
         if (task.id === found.id) {
-          return  { ...task, name };
+          return { ...task, name };
         }
 
         return task;
       })
-      resolve();
+      resolve(undefined);
     });
   }
 
-  deleteTask(id) {
+  deleteTask(id: number): Promise<void> {
     return new Promise((resolve, reject) => {
       const authId = this._authenticatedId();
       if (!authId) {
@@ -196,7 +229,7 @@ class MemTodoClient {
       }
 
       const found = this._tasks.find(task => (
-        task.id === id && 
+        task.id === id &&
         task.ownerId === authId
       ));
 
@@ -205,16 +238,16 @@ class MemTodoClient {
       }
 
       this._tasks = this._tasks.filter(task => task.id !== found.id);
-      resolve();
+      resolve(undefined);
     });
   }
 }
 
-export default MemTodoClient;
-
 class ApiError extends Error {
-  constructor(code, message, ...params) {
-    super(message, ...params);
+  code: string
+  
+  constructor(code: string, message: string, options?: ErrorOptions) {
+    super(message, options);
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, ApiError);

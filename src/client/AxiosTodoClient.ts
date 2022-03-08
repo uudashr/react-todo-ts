@@ -18,7 +18,7 @@ type UserInfo = {
 }
 
 type Task = {
-  id: string;
+  id: number;
   name: string;
   completed?: boolean;
 };
@@ -49,7 +49,7 @@ export default class AxiosTodoClient {
       const res = err.response;
       if (res && res.status === 401) {
         const { code, message } = res.data.error;
-        return Promise.reject(new ApiError(code, message));
+        return Promise.reject(new ApiError(code, message, { cause: err }));
       }
 
       return Promise.reject(err);
@@ -68,7 +68,7 @@ export default class AxiosTodoClient {
         const res = err.response;
         if (res && res.status === 409) {
           const { code, message } = res.data.error;
-          return Promise.reject(new ApiError(code, message));
+          return Promise.reject(new ApiError(code, message, { cause: err }));
         }
 
         return Promise.reject(err);
@@ -171,7 +171,7 @@ export default class AxiosTodoClient {
         const res = err.response;
         if (res && res.status === 400) {
           const { code, message } = res.data.error;
-          return Promise.reject(new ApiError(code, message));
+          return Promise.reject(new ApiError(code, message, { cause: err }));
         }
 
         return Promise.reject(err);
@@ -190,10 +190,10 @@ export default class AxiosTodoClient {
 }
 
 class ApiError extends Error {
-  private code: string;
-
-  constructor(code: string, message: string) {
-    super(message);
+  code: string
+  
+  constructor(code: string, message: string, options?: ErrorOptions) {
+    super(message, options);
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, ApiError);
