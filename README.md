@@ -6,6 +6,7 @@ Simple React Todo Application
 1. [Jest Documentation](https://jestjs.io/docs/getting-started)
 2. [Testing Library Documentation](https://testing-library.com/docs/)
 3. [How to fetch data with React Hooks](https://www.robinwieruch.de/react-hooks-fetch-data/)
+4. [Typesafe JSON parsing](https://www.pluralsight.com/tech-blog/taming-dynamic-data-in-typescript/)
 
 ## Testing
 ### jsdom

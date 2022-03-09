@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { Record, Array, String, Number, Boolean, Static } from 'runtypes';
 
 type TokenStorage = {
   get: () => string | null;
@@ -12,16 +13,31 @@ type Options = {
   tokenStorage?: TokenStorage
 };
 
-type UserInfo = {
-  name: string;
-  email: string;
-}
+const UserInfoRuntype = Record({
+  name: String,
+  email: String,
+});
 
-type Task = {
-  id: number;
-  name: string;
-  completed?: boolean;
-};
+type UserInfo = Static<typeof UserInfoRuntype>;
+// type UserInfo = {
+//   name: string;
+//   email: string;
+// }
+
+const TaskRuntype = Record({
+  id: Number,
+  name: String,
+  completed: Boolean.optional(),
+});
+
+type Task = Static<typeof TaskRuntype>;
+// type Task = {
+//   id: number;
+//   name: string;
+//   completed?: boolean;
+// };
+
+const TaskArrayRuntype = Array(TaskRuntype);
 
 export default class AxiosTodoClient {
   private axiosInstance: AxiosInstance;
@@ -83,7 +99,12 @@ export default class AxiosTodoClient {
       },
       withCredentials: true,
     }).then(res => {
-      return { email: res.data.email, name: res.data.name };
+      const validation = UserInfoRuntype.validate(res.data)
+      if (!validation.success) {
+        return Promise.reject(new ApiError('invalid_type', validation.message))
+      }
+
+      return validation.value;
     });
   }
 
@@ -109,7 +130,13 @@ export default class AxiosTodoClient {
       },
       withCredentials: true,
     }).then(res => {
-      return res.data;
+      const validation = TaskArrayRuntype.validate(res.data)
+      if (!validation.success) {
+        return Promise.reject(new ApiError('invalid_type', validation.message))
+        
+      }
+      
+      return validation.value;
     });
   }
 
@@ -122,7 +149,13 @@ export default class AxiosTodoClient {
       params: { completed: false },
       withCredentials: true,
     }).then((res) => {
-      return res.data;
+      const validation = TaskArrayRuntype.validate(res.data)
+      if (!validation.success) {
+        return Promise.reject(new ApiError('invalid_type', validation.message))
+        
+      }
+      
+      return validation.value;
     });
   }
 
@@ -135,7 +168,13 @@ export default class AxiosTodoClient {
       params: { completed: true },
       withCredentials: true,
     }).then(res => {
-      return res.data;
+      const validation = TaskArrayRuntype.validate(res.data)
+      if (!validation.success) {
+        return Promise.reject(new ApiError('invalid_type', validation.message))
+        
+      }
+      
+      return validation.value;
     });
   }
 
