@@ -21,7 +21,7 @@ const NO_OP_AUTH: Auth = {
 export interface AuthClient {
   logIn(email: string, password: string): Promise<string>
   logOut(): void;
-  token(): string
+  token(): string | null
 };
 
 export const AuthContext = React.createContext<Auth>(NO_OP_AUTH);
@@ -31,13 +31,13 @@ export function useAuth(): Auth {
 }
 
 type AuthProviderProps = {
-  authClient: AuthClient;
+  authClient?: AuthClient;
   children: React.ReactNode;
 }
 
 export function AuthProvider({ authClient, children }: AuthProviderProps) {
 
-  const [token, setToken] = React.useState<string|null>(authClient?.token());
+  const [token, setToken] = React.useState<string|null>(authClient?.token() || null);
 
   const logIn = (email: string, password: string, callback: Callback): void => {
     if (!authClient) {

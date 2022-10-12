@@ -57,7 +57,7 @@ describe('App', () => {
   
     it('renders to tasks page on "/todo"', async () => {
       const todoClient = {
-        logIn: jest.fn((email, password) => Promise.resolve()),
+        logIn: jest.fn((email, password) => Promise.resolve('')),
         token: jest.fn(() => 'i-am-a-token'),
         signUp: jest.fn((email, name, password) => Promise.resolve()),
         userInfo: jest.fn(() => ({ email: 'john.appleseed@mail.com', name: 'John Appleseed' })),
@@ -66,6 +66,7 @@ describe('App', () => {
         allTasks: jest.fn(() => Promise.resolve([])),
         outstandingTasks: jest.fn(() => Promise.resolve([])),
         completedTasks: jest.fn(() => Promise.resolve([])),
+        updateTaskName: jest.fn((id, name) => Promise.resolve()),
         updateTaskStatus: jest.fn((id, completed) => Promise.resolve()),
         deleteTask: jest.fn(id => Promise.resolve())
       };
@@ -86,7 +87,7 @@ describe('App', () => {
   });
 });
 
-function renderWithRouter(ui, { route = '/' } = {}) {
+function renderWithRouter(ui: React.ReactElement, { route = '/' } = {}) {
   window.history.pushState({}, 'Test page', route);
   return render(ui, { wrapper: BrowserRouter });
 }

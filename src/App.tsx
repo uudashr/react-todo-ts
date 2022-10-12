@@ -15,7 +15,7 @@ import SignUp, { AccountClient } from './routes/SignUp';
 import './App.css';
 
 type AppProps = {
-  todoClient: AuthClient & AccountClient & TaskClient;
+  todoClient?: AuthClient & AccountClient & TaskClient;
 }
 
 export default function App({ todoClient }: AppProps) {

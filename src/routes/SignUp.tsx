@@ -28,7 +28,7 @@ const validateMessages = {
 };
 
 type SignUpProps = {
-  accountClient: AccountClient;
+  accountClient?: AccountClient;
 }
 
 type SignUpDetail = {
