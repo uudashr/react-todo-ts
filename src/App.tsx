@@ -12,8 +12,6 @@ import Todo, { TaskClient } from './routes/Todo';
 import LogIn from './routes/LogIn';
 import SignUp, { AccountClient } from './routes/SignUp';
 
-import './App.css';
-
 type AppProps = {
   todoClient?: AuthClient & AccountClient & TaskClient;
 }

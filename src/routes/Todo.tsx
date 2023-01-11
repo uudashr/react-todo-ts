@@ -19,7 +19,6 @@ import TaskForm from '../components/TaskForm';
 import TaskList from '../components/TaskList';
 import { Group } from '../components/TaskListItem'
 
-import './Todo.css';
 import { useAuth } from '../auth';
 
 const { Title } = Typography;

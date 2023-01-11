@@ -14,8 +14,6 @@ import {
   BookFilled
 } from '@ant-design/icons';
 
-import './LogIn.css';
-
 import { useAuth } from '../auth';
 
 import Schema from 'async-validator';

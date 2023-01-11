@@ -12,8 +12,6 @@ import {
   BookFilled
 } from '@ant-design/icons';
 
-import './SignUp.css';
-
 import Schema from 'async-validator';
 import { useNavigate } from 'react-router-dom';
 Schema.warning = function(){};

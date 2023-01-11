@@ -3,8 +3,6 @@ import React from 'react';
 import { Checkbox, Spin, Space, Button } from "antd";
 import { LoadingOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
-import './TaskView.css';
-
 type Callback = (error?: Error) => void;
 
 type Handler = () => void;

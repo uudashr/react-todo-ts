@@ -2,8 +2,6 @@ import React from 'react';
 
 import { Input, Space, Button } from "antd";
 
-import './TaskEditForm.css';
-
 type Callback = (error?: Error) => void;
 
 type Handler = () => void;
