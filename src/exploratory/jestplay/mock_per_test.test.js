@@ -8,10 +8,6 @@
  * - One where the fruit module is not mocked.
  */
 describe('define mock per test', () => {
-  beforeEach(() => {
-    jest.resetModules();
-  });
-
   it('uses mocked module', () => {
     jest.doMock('./fruit', () => ({
       apple: 'mocked apple',
